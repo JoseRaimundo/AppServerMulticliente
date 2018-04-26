@@ -5,10 +5,23 @@
  */
 package Servidor;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 /**
  *
  * @author gpds-gpu
  */
 public class Servidor {
-    
+    public static void main(String[] args) throws IOException {
+        int porta = 7000;
+        ServerSocket server = new ServerSocket(porta);
+        while(true){
+           System.out.println("Aguardando conexão ... ");
+           Socket socket = server.accept();
+           System.out.println("Cliente: " + socket.getInetAddress() + " Conectado!");
+           new ManagerCliente(socket).start();
+        }        
+    }
 }
