@@ -44,3 +44,6 @@ Equipes com no máximo DOIS integrantes;
 Entrega e Defesa: 08/05/2018
 
 ## Abordagem utilizada
+
+
+![Cliente Servidor](https://github.com/JoseRaimundo/AppServerMulticliente/blob/master/arquivos/modelo_client_servidor.png)
