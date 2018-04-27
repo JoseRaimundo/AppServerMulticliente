@@ -6,10 +6,12 @@
 package Servidor;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -19,12 +21,12 @@ import java.util.logging.Logger;
  *
  * @author gpds-gpu
  */
-public class ManagerCliente extends Thread{
+public class ThreadAuxiliar extends Thread{
     private Socket socket = null;
     private DataInputStream entrada;
     private DataOutputStream saida;
    
-    public ManagerCliente(Socket socket){
+    public ThreadAuxiliar(Socket socket){
         this.socket= socket;       
     }
     
@@ -40,17 +42,32 @@ public class ManagerCliente extends Thread{
               
             //verifica se o arquivo existe
             //se existir
-            if (file.isFile()) {
+            
+            //  File file = new File ("arquivos/arquivo_teste.html"); 
+
+         
+            
+            
+            if (file.exists()) {
                 this.saida.writeInt(200);
                 //outra saida só para o arquivo
-                 byte [] mybytearray  = new byte [(int)file.length()];
-                FileInputStream fis = new FileInputStream(file);
-                BufferedInputStream bis = new BufferedInputStream(fis);
-                bis.read(mybytearray,0,mybytearray.length);
-                System.out.println("Enviando arquivo para "+ socket.getInetAddress() + "  ... ");
-                saida.write(mybytearray,0,mybytearray.length);
-                saida.flush();
-                System.out.println("Envio para "+ socket.getInetAddress() + " concluido!");
+                
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                String text = "";
+
+                while ((text = reader.readLine()) != null) {
+                    saida.writeUTF(text);
+                }
+                
+                
+//                 byte [] mybytearray  = new byte [(int)file.length()];
+//                FileInputStream fis = new FileInputStream(file);
+//                BufferedInputStream bis = new BufferedInputStream(fis);
+//                bis.read(mybytearray,0,mybytearray.length);
+//                System.out.println("Enviando arquivo para "+ socket.getInetAddress() + "  ... ");
+//                saida.write(mybytearray,0,mybytearray.length);
+//                saida.flush();
+//                System.out.println("Envio para "+ socket.getInetAddress() + " concluido!");
             }else{
                 //se não exitir
                 System.out.println("Arquivo solicitado por "+ socket.getInetAddress() + " não encontrado!");
@@ -62,7 +79,7 @@ public class ManagerCliente extends Thread{
             socket.close();
             
         } catch (IOException ex) {
-            Logger.getLogger(ManagerCliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ThreadAuxiliar.class.getName()).log(Level.SEVERE, null, ex);
         }        
     }
 }

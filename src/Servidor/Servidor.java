@@ -21,7 +21,7 @@ public class Servidor {
            System.out.println("Aguardando conexão ... ");
            Socket socket = server.accept();
            System.out.println("Cliente: " + socket.getInetAddress() + " Conectado!");
-           new ManagerCliente(socket).start();
+           new ThreadAuxiliar(socket).start();
         }        
     }
 }
