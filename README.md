@@ -47,3 +47,5 @@ Entrega e Defesa: 08/05/2018
 
 
 ![Cliente Servidor](https://github.com/JoseRaimundo/AppServerMulticliente/blob/master/arquivos/modelo_client_servidor.png)
+
+O Socket no cliente tenta a conexão com o ServerSocket que está em um loop, no servidor. Ao aceitar a conecão, o ServerSoket cria um socket (que representa a comunicação com o cliente) e passa como parâmetro para uma nova thread (Thread Auxiliar), essa thread é responsável por minipular o socket do cliente durante todo o restante da comunicação com este cliente. Enquanto isso, o ServerSocket continua a executar em loop, retornando a um estado de espera por novas conexões.
