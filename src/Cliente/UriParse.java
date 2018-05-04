@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
  * @author gpds-gpu
  */
 public class UriParse {
-    private String protocolo = new String();
+    private String protocolo;
     private String host;
     private String port;
     private String file_name;
