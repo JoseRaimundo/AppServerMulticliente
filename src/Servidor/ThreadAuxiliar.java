@@ -23,6 +23,7 @@ import java.util.logging.Logger;
  */
 public class ThreadAuxiliar extends Thread{
     private Socket socket = null;
+    private String pasta_publica = "arquivos";
     private DataInputStream entrada;
     private DataOutputStream saida;
    
@@ -33,41 +34,29 @@ public class ThreadAuxiliar extends Thread{
     @Override
     public void run(){
         try {
+            
             this.entrada = new DataInputStream(socket.getInputStream());
             this.saida  = new DataOutputStream(socket.getOutputStream());
             
             String entrada_temp = entrada.readUTF();
-            
-            File file = new File (entrada_temp);
-              
-            //verifica se o arquivo existe
-            //se existir
-            
-            //  File file = new File ("arquivos/arquivo_teste.html"); 
-
-         
-            
-            
+            System.out.println("Procurando arquivo: " + pasta_publica+entrada_temp);
+            File file = new File (pasta_publica+entrada_temp);        
+                                 
             if (file.exists()) {
+                //tempo para estabilizar os pipes dos streams
                 this.saida.writeInt(200);
-                //outra saida só para o arquivo
-                
+                   
                 BufferedReader reader = new BufferedReader(new FileReader(file));
                 String text = "";
-
-                while ((text = reader.readLine()) != null) {
+               
+                System.out.println("Enviando arquivo: " + pasta_publica+entrada_temp);
+                while (true) {
+                    text = reader.readLine(); 
+                    if(text == null) break;
                     saida.writeUTF(text);
                 }
+                System.out.println("Arquivo enviado!");
                 
-                
-//                 byte [] mybytearray  = new byte [(int)file.length()];
-//                FileInputStream fis = new FileInputStream(file);
-//                BufferedInputStream bis = new BufferedInputStream(fis);
-//                bis.read(mybytearray,0,mybytearray.length);
-//                System.out.println("Enviando arquivo para "+ socket.getInetAddress() + "  ... ");
-//                saida.write(mybytearray,0,mybytearray.length);
-//                saida.flush();
-//                System.out.println("Envio para "+ socket.getInetAddress() + " concluido!");
             }else{
                 //se não exitir
                 System.out.println("Arquivo solicitado por "+ socket.getInetAddress() + " não encontrado!");
@@ -79,7 +68,7 @@ public class ThreadAuxiliar extends Thread{
             socket.close();
             
         } catch (IOException ex) {
-            Logger.getLogger(ThreadAuxiliar.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+            System.err.println("Problema ao abrir o arquivo: " + ex);;           
+        }
     }
 }
