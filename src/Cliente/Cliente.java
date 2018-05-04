@@ -7,6 +7,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,8 +20,9 @@ import java.util.Scanner;
  *
  * @author gpds-gpu
  */
-public class TesteCliente {
+public class Cliente {
     public static void main(String[] args) throws IOException, Exception {
+        int STATUS_OK=200, STATUS_ERRO=400;
         
         //Pega a URI
         Scanner input = new Scanner(System.in);        
@@ -40,27 +43,38 @@ public class TesteCliente {
 //                "\nArquivo: " + uri_parse.getFileName());
 
         int port = Integer.parseInt(uri_parse.getPort());
-        String host = uri_parse.getHost(); //obs.: verificar caso não consiga conexão
+        String host = uri_parse.getHost();
         String file_name = uri_parse.getFileName();
         
-        //Instancia socket com host e porta do servidor
-        Socket socket = new Socket(host, port);
-        
-        DataInputStream entrada = new DataInputStream(socket.getInputStream());
-        DataOutputStream saida = new DataOutputStream(socket.getOutputStream());
-            
-        //Manda arquivo para servidor
-        saida.writeUTF(file_name);
-                   
-        //Servidor retorna status de erro
-        if (entrada.readInt() == 400){
-            System.out.println("Não foi possível localizar o arquivo.");
-        }
+        try{
+            //Instancia socket com host e porta do servidor
+            Socket socket = new Socket(host, port);
 
-        //Status 200
-        //exibe no terminal
-        
-        socket.close();       
+            DataInputStream entrada = new DataInputStream(socket.getInputStream());
+            DataOutputStream saida = new DataOutputStream(socket.getOutputStream());
+
+            //Manda nome do arquivo para servidor
+            saida.writeUTF(file_name);
+
+            //Recebe arquivo do servidor
+            int status = entrada.readInt();           
+            
+            if (status == STATUS_OK) {
+                System.out.println("Entrou no loop .. ");
+                while(entrada.available() != 0){
+                    System.out.println(entrada.readUTF()); //Imprime contaúdo do arquivo
+                }
+            }else if(status == STATUS_ERRO){
+                System.out.println("Arquivo não encontrado!");
+            }else{
+                System.out.println("Falha na conexão!");
+            }
+
+            socket.close();   
+            
+        } catch (IOException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
