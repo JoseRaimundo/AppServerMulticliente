@@ -39,8 +39,6 @@ public class Cliente {
         
         //URI válida
         uri_parse.parse();
-//        System.out.println("IP: "+ uri_parse.getHost()+ "\nPorta: " + Integer.parseInt(uri_parse.getPort()) + 
-//                "\nArquivo: " + uri_parse.getFileName());
 
         int port = Integer.parseInt(uri_parse.getPort());
         String host = uri_parse.getHost();
