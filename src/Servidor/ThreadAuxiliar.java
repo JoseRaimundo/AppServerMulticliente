@@ -68,7 +68,7 @@ public class ThreadAuxiliar extends Thread{
             socket.close();
             
         } catch (IOException ex) {
-            System.err.println("Problema ao abrir o arquivo: " + ex);;           
+            System.err.println("Problemas no envio do arquivo, verifique a conexão: " + ex);;           
         }
     }
 }
