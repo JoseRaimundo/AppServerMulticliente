@@ -36,7 +36,7 @@ public class Cliente {
               
         //URI inválida
         if (uri_parse.validate() == false){
-           System.out.println("URI incorreta, por favor, digite novamente");
+           System.out.println("URI incorreta, por favor, tente novamente");
            System.exit(0);
         }
         
