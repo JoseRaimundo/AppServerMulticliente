@@ -32,17 +32,16 @@ public class Cliente {
         }
         
         //Valida a URI
-        UriParse uri_parse = new UriParse(uri); //ex "192.168.1.212:6500/index.html" 127.0.0.1:7000/arquivo_teste.html
+        UriParse uri_parse = new UriParse(uri.trim()); //ex "192.168.1.212:6500/index.html" 127.0.0.1:7000/arquivo_teste.html
               
         //URI inválida
         if (uri_parse.validate() == false){
-           System.out.println("URI incorreta, por favor, tente novamente");
+           System.err.println("URI incorreta, por favor, tente novamente");
            System.exit(0);
         }
         
         //URI válida
         uri_parse.parse();
-
         int port = Integer.parseInt(uri_parse.getPort());
         String host = uri_parse.getHost();
         String file_name = uri_parse.getFileName();
@@ -64,14 +63,13 @@ public class Cliente {
             
             if (status == STATUS_OK) {
                 
-                System.out.println("Recebendo arquivo .. ");
+                System.out.println("Cod. 200: Arquivo encontrado!\nRecebendo arquivo .. ");
                 //tempo para envio completo dos buffers
-                Thread.sleep(100);
-                while(entrada.available() != 0){
-                    System.out.println(entrada.readUTF()); //Imprime contaúdo do arquivo
-                }
+                String text = entrada.readUTF();
+                System.out.println(text); //Imprime contaúdo do arquivo
+                
             }else if(status == STATUS_NOT_FOUND){
-                System.out.println("Arquivo não encontrado!");
+                System.out.println("Cod. 400: Arquivo não encontrado!");
             }
             socket.close();   
             
@@ -79,5 +77,4 @@ public class Cliente {
             System.err.println("Falha na conexão: " + ex);
         }
     }
-    
 }

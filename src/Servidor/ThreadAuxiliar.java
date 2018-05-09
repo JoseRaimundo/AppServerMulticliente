@@ -5,17 +5,13 @@
  */
 package Servidor;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -23,7 +19,7 @@ import java.util.logging.Logger;
  */
 public class ThreadAuxiliar extends Thread{
     private Socket socket = null;
-    private String pasta_publica = "arquivos";
+    private final String pasta_publica = "arquivos";
     private DataInputStream entrada;
     private DataOutputStream saida;
    
@@ -47,19 +43,20 @@ public class ThreadAuxiliar extends Thread{
                 this.saida.writeInt(200);
                    
                 BufferedReader reader = new BufferedReader(new FileReader(file));
+                //"compactando" arquivo
                 String text = "";
-               
-                System.out.println("Enviando arquivo: " + pasta_publica+entrada_temp);
-                while (true) {
-                    text = reader.readLine(); 
-                    if(text == null) break;
-                    saida.writeUTF(text);
+                
+                while (reader.ready()) {
+                    text += reader.readLine() + "\n"; 
+
                 }
-                System.out.println("Arquivo enviado!");
+                System.out.println("Enviando arquivo: " + pasta_publica+entrada_temp);
+                saida.writeUTF(text);
+                System.out.println("Cod. 200: Arquivo enviado!");
                 
             }else{
                 //se não exitir
-                System.out.println("Arquivo solicitado por "+ socket.getInetAddress() + " não encontrado!");
+                System.out.println("Cod. 400: Arquivo solicitado por "+ socket.getInetAddress() + " não encontrado!");
                 this.saida.writeInt(400);
             }
             
