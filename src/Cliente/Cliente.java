@@ -71,7 +71,9 @@ public class Cliente {
             }else if(status == STATUS_NOT_FOUND){
                 System.out.println("Cod. 400: Arquivo não encontrado!");
             }
-            socket.close();   
+            socket.close(); 
+            entrada.close();
+            saida.close();
             
         } catch (IOException ex) {
             System.err.println("Falha na conexão: " + ex);
